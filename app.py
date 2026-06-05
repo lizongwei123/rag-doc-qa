@@ -153,7 +153,7 @@ with st.sidebar:
     process_btn = st.button("🔨 构建知识库", type="primary", use_container_width=True)
 
     # 状态显示
-    if "engine" in st.session_state:
+    if "engine" in st.session_state and st.session_state.engine is not None:
         st.divider()
         st.markdown("### 📊 知识库状态")
         stats = st.session_state.engine.get_stats()

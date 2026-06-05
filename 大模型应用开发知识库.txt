@@ -1,0 +1,100 @@
+大语言模型（LLM）应用开发入门指南
+
+一、大模型基础概念
+
+1. Token（词元）
+Token是大模型处理文本的最小单位。一个中文字通常等于1-2个token，一个英文单词约等于1-3个token。
+例如："我爱AI" 大约是4-6个token。模型的上下文窗口（Context Window）决定了它能一次处理多少个token，
+GPT-4支持128K token，DeepSeek支持64K token，这意味着可以一次输入整本书的内容。
+
+2. Temperature（温度系数）
+Temperature控制模型输出的随机性，取值范围0-2：
+- Temperature=0：模型输出最确定、最保守，适合代码生成、事实问答
+- Temperature=0.7-1：输出有一定创意，适合写作、头脑风暴
+- Temperature=1.5-2：输出非常随机，适合艺术创作、发散思维
+
+3. Prompt Engineering（提示词工程）
+Prompt是用户给模型的指令。好的Prompt设计能显著提升模型输出质量。核心技巧包括：
+- 角色设定：告诉模型"你是一个专业的Python开发工程师"
+- 少样本学习（Few-shot）：给模型提供2-3个示例
+- 思维链（Chain of Thought）：要求模型"一步一步思考"
+- 结构化输出：要求模型以JSON/Markdown格式返回结果
+
+二、RAG（检索增强生成）
+
+1. 什么是RAG
+RAG全称Retrieval-Augmented Generation，即检索增强生成。它的核心思想是：
+大模型不是全知全能的，它的知识有截止日期，也无法知道你私有的文档内容。
+RAG的解决方案是：在让模型回答问题之前，先去知识库里检索相关信息，
+然后把检索到的内容一起发给模型，让模型基于这些资料来回答。
+
+2. RAG的完整流程
+第一步：文档加载 - 读入PDF、Word、网页等各种格式的文档
+第二步：文本分片 - 把长文档切成小段，每段通常300-800个字符
+第三步：向量化（Embedding）- 把每段文本转成数学向量，语义相近的文本向量也相近
+第四步：存入向量数据库 - 把向量存到ChromaDB、Milvus等专业数据库中
+第五步：用户提问 - 用户输入问题
+第六步：检索 - 把用户问题也转成向量，去数据库中找最相似的文本片段
+第七步：生成回答 - 把检索到的相关片段和用户问题一起发给大模型，生成最终答案
+
+3. 为什么需要文本分片
+大模型的上下文窗口虽然很大，但不能把整本书直接丢进去：
+- 检索精度：小块文本更容易精准匹配
+- 成本控制：只发送相关内容，减少token消耗
+- 速度优化：小块检索比全文检索快得多
+分片的关键是要设置overlap（重叠），防止一个完整语义被切在边界上。
+
+4. RAG vs 微调（Fine-tuning）
+RAG的优点：不需要训练模型，成本极低，知识可随时更新，适合知识库问答
+微调的优点：模型深度理解领域知识，推理速度更快，适合需要模型学会特定思维模式的场景
+实际项目中往往两者结合使用：微调让模型"学会怎么想"，RAG让模型"知道最新信息"。
+
+三、LangChain框架
+
+LangChain是目前最流行的LLM应用开发框架，核心组件：
+- Chain（链）：把多个步骤串联起来，比如"检索→生成"
+- Prompt Template（提示模板）：可复用的提示词结构
+- Memory（记忆）：让对话有上下文记忆
+- Tools（工具）：让模型能调用外部API、搜索引擎、计算器等
+- Agent（智能体）：让模型自主决定使用哪些工具、按什么顺序完成任务
+
+四、向量数据库
+
+常见的向量数据库：
+- ChromaDB：轻量级，Python原生，适合原型开发和小型项目
+- Milvus：高性能分布式，适合生产环境和大规模数据
+- FAISS：Facebook开源，纯C++底层，速度极快
+- Pinecone：商业SaaS服务，免运维
+
+五、DeepSeek API 使用
+
+DeepSeek是国内性价比最高的大模型API：
+- 模型：deepseek-chat（对话）、deepseek-coder（代码）
+- 价格：约1元/百万token，比GPT-4便宜100倍以上
+- 兼容OpenAI SDK格式，切换零成本
+- 注册地址：https://platform.deepseek.com
+- 新用户赠送免费额度
+
+调用示例（Python）：
+```python
+from openai import OpenAI
+client = OpenAI(
+    api_key="sk-xxx",
+    base_url="https://api.deepseek.com"
+)
+response = client.chat.completions.create(
+    model="deepseek-chat",
+    messages=[{"role": "user", "content": "什么是RAG？"}]
+)
+print(response.choices[0].message.content)
+```
+
+六、面试高频问题
+
+1. RAG的完整执行流程是什么？每一步的作用？
+2. 大模型"幻觉"是什么？RAG如何抑制幻觉？
+3. 文本分片大小如何选择？chunk_size=300和chunk_size=800各有什么优劣？
+4. 检索召回不准确怎么优化？有哪些重排序策略？
+5. LangChain的核心组件有哪些？Chain和Agent的区别是什么？
+6. 微调、RAG、Prompt优化三者分别适用于什么场景？
+7. 向量数据库的选型考虑因素有哪些？

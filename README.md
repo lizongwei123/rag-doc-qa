@@ -170,6 +170,6 @@ rag-qa/
 **李宗蔚** · 人工智能专业在读
 
 - 📧 2673369774@qq.com
-- 🔗 GitHub: [待添加]
+- 🔗 GitHub: https://github.com/lizongwei123/rag-doc-qa
 
 > 本项目为实习求职项目，欢迎 Star 和交流！

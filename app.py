@@ -169,7 +169,7 @@ with st.sidebar:
     **技术栈**：
     - LangChain · ChromaDB
     - DeepSeek · Streamlit
-    - text2vec-chinese
+    - DeepSeek Embedding
 
     **GitHub**: [项目地址]
 

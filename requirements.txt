@@ -1,28 +1,9 @@
-# ============================================
-# RAG 智能文档问答系统 - 依赖
-# ============================================
-# 安装: pip install -r requirements.txt
-# Python 版本: >= 3.9
-
-# --- 核心框架 ---
 langchain>=0.2.0
 langchain-community>=0.2.0
 langchain-openai>=0.1.0
-
-# --- 向量数据库 ---
-chromadb>=0.5.0
-
-# --- Embedding模型 ---
+chromadb>=0.4.0
 sentence-transformers>=2.7.0
-text2vec>=1.2.0
-
-# --- 文档加载 ---
 pypdf>=4.0.0
-unstructured>=0.14.0
-
-# --- Web界面 ---
 streamlit>=1.35.0
-
-# --- 其他 ---
 python-dotenv>=1.0.0
 tiktoken>=0.7.0
